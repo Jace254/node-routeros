@@ -21,7 +21,7 @@
         "typescript",
         "node"
     ],
-    "author": ["Aluisio Rodrigues Amaral","jace254"],
+    "authors": ["Aluisio Rodrigues Amaral","jace254"],
     "license": "MIT",
     "devDependencies": {
         "@types/debug": "0.0.30",
