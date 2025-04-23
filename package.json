@@ -1,5 +1,5 @@
 {
-    "name": "node-routeros",
+    "name": "@jace254/node-routeros",
     "version": "1.6.9",
     "description": "Mikrotik Routerboard RouterOS API for NodeJS",
     "main": "./dist/index",
@@ -21,20 +21,20 @@
         "typescript",
         "node"
     ],
-    "author": "Aluisio Rodrigues Amaral",
+    "author": ["Aluisio Rodrigues Amaral","jace254"],
     "license": "MIT",
     "devDependencies": {
         "@types/debug": "0.0.30",
-        "@types/i18next": "^8.4.3",
+        "@types/i18next": "8.4.3",
         "@types/iconv-lite": "0.0.1",
-        "@types/node": "^12.12.35",
-        "chai": "^4.1.2",
-        "dotenv": "^8.2.0",
-        "mocha": "^4.1.0",
-        "prettier": "^2.0.4",
-        "rimraf": "^2.6.2",
-        "source-map-support": "^0.5.16",
-        "typescript": "^3.8.3"
+        "@types/node": "12.12.35",
+        "chai": "4.1.2",
+        "dotenv": "8.2.0",
+        "mocha": "4.1.0",
+        "prettier": "2.0.4",
+        "rimraf": "2.6.2",
+        "source-map-support": "0.5.16",
+        "typescript": "3.8.3"
     },
     "dependencies": {
         "debug": "*",
