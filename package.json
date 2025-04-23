@@ -1,5 +1,5 @@
 {
-    "name": "@jace254/node-routeros",
+    "name": "node-routeros-v2",
     "version": "1.6.10",
     "description": "Mikrotik Routerboard RouterOS API for NodeJS",
     "main": "./dist/index",
