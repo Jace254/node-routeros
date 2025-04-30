@@ -162,7 +162,7 @@ export class Channel extends EventEmitter {
                 this.close();
                 break;
             case '!empty':
-                if (!this.trapped) this.emit('done', []);
+                if (!this.trapped) this.emit('done', this.data);
                 this.close();
                 break;
             default:

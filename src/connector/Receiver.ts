@@ -278,6 +278,7 @@ export class Receiver {
                         this.currentPacket.push(line.sentence);
                     }
 
+                    // Check if we should process more sentences
                     if (
                         this.sentencePipe.length === 0 &&
                         this.dataLength === 0
@@ -287,12 +288,47 @@ export class Receiver {
                                 'No more sentences to process, will send data to tag %s',
                                 this.currentTag,
                             );
-                            this.sendTagData(this.currentTag);
+                            
+                            // Store the current tag before sending data
+                            // as sendTagData may unregister it
+                            const tagToSend = this.currentTag;
+                            
+                            // Before we clean up or potentially destroy the tag reference
+                            const tagExists = this.tags.has(tagToSend);
+                            if (tagExists) {
+                                this.sendTagData(tagToSend);
+                            } else {
+                                info('Tag %s is no longer registered, skipping send', tagToSend);
+                                this.cleanUp();
+                            }
                         } else {
                             info('No more sentences and no data to send');
                         }
                         this.processingSentencePipe = false;
                     } else {
+                        // Handle case where the tag might have been unregistered
+                        // If we have another line to process after the tag has been unregistered
+                        // Check if we still need to process remaining sentences
+                        if (this.currentReply === '!done' || this.currentReply === '!empty') {
+                            // Check if we should process more sentences or reset
+                            // If there are more sentences referencing a tag that's already
+                            // been closed, we should skip them or handle them differently
+                            const nextLines = this.sentencePipe.filter(l => /^\.tag=/.test(l.sentence));
+                            if (nextLines.length > 0) {
+                                const nextTagLine = nextLines[0].sentence;
+                                const nextTag = nextTagLine.substring(5);
+                                
+                                // If the next tag is the same as the current one we just processed
+                                // and the tag is not registered anymore, we should clear the pipe
+                                if (nextTag === this.currentTag && !this.tags.has(this.currentTag)) {
+                                    info('Detected unregistered tag %s in pipeline, clearing pipe', this.currentTag);
+                                    this.sentencePipe = [];
+                                    this.cleanUp();
+                                    this.processingSentencePipe = false;
+                                    return;
+                                }
+                            }
+                        }
                         process();
                     }
                 } else {

@@ -6,7 +6,7 @@ function env(key) {
 
 module.exports = {
     host: env('HOST'),
-    user: env('USERNAME'),
+    user: env('RUSERNAME'),
     password: env('PASSWORD'),
     sslPort: env('SSL_PORT'),
 };
