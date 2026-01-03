@@ -265,13 +265,19 @@ export class Receiver {
                     if (/^\.tag=/.test(line.sentence)) {
                         this.currentTag = line.sentence.substring(5);
                     } else if (/^!/.test(line.sentence)) {
-                        if (this.currentTag) {
+                        const tagToSend = this.currentTag;
+                        const tagExists = this.tags.has(tagToSend);
+
+                        if (tagExists) {
                             info(
                                 'Received another response, sending current data to tag %s',
-                                this.currentTag,
+                                tagToSend,
                             );
-                            this.sendTagData(this.currentTag);
+                            this.sendTagData(tagToSend);
+                        } else {
+                            info('Tag %s is no longer registered, skipping send', tagToSend);
                         }
+
                         this.currentPacket.push(line.sentence);
                         this.currentReply = line.sentence;
                     } else {
