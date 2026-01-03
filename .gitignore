@@ -58,7 +58,7 @@ typings/
 .env
 
 # Ignore built ts files
-dist
+# dist - now tracked for GitHub package installation
 
 # Temp files
 temp

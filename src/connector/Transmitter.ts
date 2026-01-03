@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import * as iconv from 'iconv-lite';
+const iconv = require('iconv-lite');
 import * as debug from 'debug';
 
 const info = debug('routeros-api:connector:transmitter:info');
