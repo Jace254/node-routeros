@@ -12,28 +12,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-          
+
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Build TypeScript
         run: pnpm run tsc:build
-        
+
       - name: Commit and push dist
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
