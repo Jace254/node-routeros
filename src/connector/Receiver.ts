@@ -265,17 +265,12 @@ export class Receiver {
                     if (/^\.tag=/.test(line.sentence)) {
                         this.currentTag = line.sentence.substring(5);
                     } else if (/^!/.test(line.sentence)) {
-                        const tagToSend = this.currentTag;
-                        const tagExists = this.tags.has(tagToSend);
-
-                        if (tagExists) {
+                        if (this.currentTag) {
                             info(
                                 'Received another response, sending current data to tag %s',
                                 tagToSend,
                             );
-                            this.sendTagData(tagToSend);
-                        } else {
-                            info('Tag %s is no longer registered, skipping send', tagToSend);
+                            this.sendTagData(this.currentTag);
                         }
 
                         this.currentPacket.push(line.sentence);
@@ -295,18 +290,7 @@ export class Receiver {
                                 this.currentTag,
                             );
                             
-                            // Store the current tag before sending data
-                            // as sendTagData may unregister it
-                            const tagToSend = this.currentTag;
-                            
-                            // Before we clean up or potentially destroy the tag reference
-                            const tagExists = this.tags.has(tagToSend);
-                            if (tagExists) {
-                                this.sendTagData(tagToSend);
-                            } else {
-                                info('Tag %s is no longer registered, skipping send', tagToSend);
-                                this.cleanUp();
-                            }
+                            this.sendTagData(this.currentTag);
                         } else {
                             info('No more sentences and no data to send');
                         }
@@ -360,7 +344,7 @@ export class Receiver {
             );
             tag.callback(this.currentPacket);
         } else {
-            throw new RosException('UNREGISTEREDTAG');
+            info('Tag %s is no longer registered, discarding packet', currentTag);
         }
         this.cleanUp();
     }
