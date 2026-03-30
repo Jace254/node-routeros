@@ -268,7 +268,7 @@ export class Receiver {
                         if (this.currentTag) {
                             info(
                                 'Received another response, sending current data to tag %s',
-                                tagToSend,
+                                this.currentTag,
                             );
                             this.sendTagData(this.currentTag);
                         }
@@ -290,7 +290,18 @@ export class Receiver {
                                 this.currentTag,
                             );
                             
-                            this.sendTagData(this.currentTag);
+                            // Store the current tag before sending data
+                            // as sendTagData may unregister it
+                            const tagToSend = this.currentTag;
+
+                            // Before we clean up or potentially destroy the tag reference
+                            const tagExists = this.tags.has(tagToSend);
+                            if (tagExists) {
+                                this.sendTagData(tagToSend);
+                            } else {
+                                info('Tag %s is no longer registered, skipping send', tagToSend);
+                                this.cleanUp();
+                            }
                         } else {
                             info('No more sentences and no data to send');
                         }
