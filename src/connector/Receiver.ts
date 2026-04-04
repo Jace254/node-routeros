@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import * as iconv from 'iconv-lite';
+const iconv = require('iconv-lite');
 import * as debug from 'debug';
 import { RosException } from '../RosException';
 
@@ -272,6 +272,7 @@ export class Receiver {
                             );
                             this.sendTagData(this.currentTag);
                         }
+
                         this.currentPacket.push(line.sentence);
                         this.currentReply = line.sentence;
                     } else {
@@ -292,7 +293,7 @@ export class Receiver {
                             // Store the current tag before sending data
                             // as sendTagData may unregister it
                             const tagToSend = this.currentTag;
-                            
+
                             // Before we clean up or potentially destroy the tag reference
                             const tagExists = this.tags.has(tagToSend);
                             if (tagExists) {
@@ -354,7 +355,7 @@ export class Receiver {
             );
             tag.callback(this.currentPacket);
         } else {
-            throw new RosException('UNREGISTEREDTAG');
+            info('Tag %s is no longer registered, discarding packet', currentTag);
         }
         this.cleanUp();
     }
